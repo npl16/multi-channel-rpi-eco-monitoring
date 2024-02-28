@@ -13,12 +13,9 @@ fi
 sudo service udev stop
 sudo service udev start
 
-# On boot up, remove all the prev data (that should have been retrieved)
-# so we don't run out of SD card storage space.
-sudo rm -r /home/pi/multi_channel_monitoring_data/live_data
 
 tries=0
-max_tries=5
+max_tries=100
 while true; do
 	timeout 2s wget -q --spider http://google.com
 	if [ $? -eq 0 ]; then
@@ -43,6 +40,18 @@ sudo bash ./bash_update_time.sh
 
 # Start ssh-agent so password not required
 eval $(ssh-agent -s)
+
+# Pull latest code from repo
+last_sha=$(git rev-parse HEAD)
+git fetch origin
+branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+git reset --hard origin/$branch
+printf 'Pulled from github\n'
+now_sha=$(git rev-parse HEAD)
+
+# Check if this file has changed - reboot if so
+changed_files="$(git diff-tree -r --name-only --no-commit-id $last_sha $now_sha)"
+echo "$changed_files" | grep --quiet "recorder_startup_script" && sudo reboot
 
 # Add in current date and time to log files
 currentDate=$(date +"%Y-%m-%d_%H.%M")
