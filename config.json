@@ -2,7 +2,7 @@
     "sys": {
         "upload_dir": "/home/pi/multi_channel_monitoring_data", 
         "working_dir": "/home/pi/tmp_dir", 
-        "reboot_time": "04:00"
+        "reboot_time": "02:00"
     }, 
     "ftp": {}, 
     "sensor": {
