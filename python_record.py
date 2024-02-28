@@ -191,7 +191,7 @@ def exit_handler(signal, frame):
     :return:
     """
 
-    logging.info('SIGINT detected, shutting down')
+    logging.info('SIGINT detected, shutting down recording thread')
     # set the event to signal threads
     raise StopMonitoring
 
@@ -271,24 +271,6 @@ def clean_dirs(working_dir, upload_dir, pre_upload_dir):
         if not os.listdir(subdir):
             logging.info('Removing empty pre upload directory: {}'.format(subdir))
             shutil.rmtree(subdir, ignore_errors=True)
-
-
-def storage_check_shutdown():
-    """
-    Checks if at least 1 GB storage space is free, before recording
-    (typical recording size for 20 min file = 400 mb)
-    Otherwise, shuts down (trying to write over max storage corrupts the device)
-    """
-    
-    min_storage_required = 1
-    
-    root_path = "/"
-    bytes_avail = psutil.disk_usage(root_path).free
-    gb_avail = bytes_avail / 1024 / 1024 / 1024
-    
-    if gb_avail < min_storage_required:
-        logging.info('\nLess than {} GB storage available. Safely shutting down.\n'.format(min_storage_required))
-        safe_shutdown()
         
 
 def continuous_recording(sensor, working_dir, upload_dir, die):
@@ -392,9 +374,9 @@ def record(config_file, logfile_name, log_dir='logs'):
         sys.exit()
 
     # Schedule restart at reboot time, running in a separate process
-    #logging.info('Scheduling restart for {}'.format(reboot_time))
-    #cmd = '(sudo shutdown -c && shutdown -r {}) &'.format(reboot_time)
-    #subprocess.call(cmd, shell=True)
+    logging.info('Scheduling restart for {}'.format(reboot_time))
+    cmd = '(sudo shutdown -c && shutdown -r {}) &'.format(reboot_time)
+    subprocess.call(cmd, shell=True)
     
     # Schedule a shutdown after X hours, based on battery life...
     # Set the number a couple hours lower than expected (to be safe)
