@@ -286,8 +286,6 @@ def continuous_recording(sensor, working_dir, upload_dir, die):
 
     # Start recording
     while not die.is_set():
-        # Before new 1200 s recording, check if sufficient storage available
-        storage_check_shutdown()
         # Begin new recording
         record_sensor(sensor, working_dir, upload_dir, sleep=True)
 
