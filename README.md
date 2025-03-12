@@ -63,7 +63,7 @@ If you would rather start using a stock Raspbian image, there's an extra couple 
 ##### Set up Multi-Channel Eco Monitoring
 
 * Log in and open a terminal
-* Clone this repository into the home directory of the Raspberry pi: ``git clone https://github.com/BeckyHeath/multi-channel-rpi-eco-monitoring.git`` (see below regarding branches)
+* Clone this repository into the home directory of the Raspberry pi: ``git clone https://github.com/npl16/multi-channel-rpi-eco-monitoring.git`` (see below regarding branches)
 * Install the required packages: ``sudo apt-get -y install fswebcam lftp ffmpeg usb-modeswitch ntpdate zip``
 * If you want to use a different config file (e.g., want to upload to FTP server):
   * First, delete config.json from multi-channel-rpi-eco-monitoring folder
